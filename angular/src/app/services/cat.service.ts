@@ -21,6 +21,8 @@ export class CatService {
 
   private apiUrl = `${environment.apiUrl}/cats`;
 
+  totalVotes: number = 0;
+
   constructor(private http: HttpClient) { }
 
   getCats(): Observable<Cat[]> {
@@ -33,5 +35,12 @@ export class CatService {
 
   vote(data: Vote) {
     return this.http.post<void>(`${this.apiUrl}/vote`, data);
+  }
+
+  getTotalVotes(): void {
+    this.http.get<number>(`${this.apiUrl}/totalVotes`).subscribe({
+      next: (data) => this.totalVotes = data,
+      error: (err) => console.error(err)
+    });
   }
 }

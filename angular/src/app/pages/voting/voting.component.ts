@@ -23,6 +23,7 @@ export class VoteComponent implements OnInit {
     const loser = this.pair.find(c => c.id !== winner.id);
     this.catService.vote({ winnerId: winner.id, loserId: loser!.id }).subscribe(() => {
       this.loadPair();
+      this.catService.getTotalVotes(); // Temporaire - à améliorer
     });
   }
 

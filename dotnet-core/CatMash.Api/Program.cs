@@ -56,4 +56,10 @@ app.MapPost("/cats/vote", (Vote vote, CatService service) =>
     return Results.Ok();
 });
 
+app.MapGet("/cats/totalVotes", (CatService service) =>
+{
+    var totalVotes = service.Cats.Sum(c => c.Score);
+    return Results.Ok(totalVotes);
+});
+
 app.Run();
