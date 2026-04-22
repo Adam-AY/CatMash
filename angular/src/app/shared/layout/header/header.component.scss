@@ -1,0 +1,17 @@
+@use 'variables' as *;
+
+.header {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 2em;
+
+    & .logo {
+        width: 6em;
+    }
+
+    & h1 {
+        font-size: 18px;
+        letter-spacing: 2px;
+        color: $primary;
+    }
+}
