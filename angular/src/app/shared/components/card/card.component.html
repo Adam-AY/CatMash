@@ -1,0 +1,17 @@
+@if(item) {
+<div class="card" [ngClass]="[cssClass]">
+    <div class="rank">{{rank}}</div>
+    <img [src]="item.url" alt="cat" />
+    <h3>Chat {{ item.id }}</h3>
+    <p>Score: {{ item.score }} pts</p>
+</div>
+}
+@else
+{
+<div class="card empty">
+    <div class="rank">X</div>
+    <img src="logo.png" alt="cat" />
+    <h3>Chat</h3>
+    <p>Score: X pts</p>
+</div>
+}

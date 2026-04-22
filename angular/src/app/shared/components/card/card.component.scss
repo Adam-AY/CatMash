@@ -1,0 +1,86 @@
+@use 'variables' as *;
+
+.card {
+  position: relative;
+  padding: 15px;
+  border: 1px solid $gray;
+  border-radius: 10px;
+  text-align: center;
+  background: $bg-color;
+  transition: 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  &.empty {
+    border: 3px solid $primary;
+    background-color: $white;
+    opacity: 0.4;
+  }
+
+  &.winner {
+    background-color: $primary;
+
+    &.first-place {
+        padding: 3em;
+    }
+
+     &.second-place {
+        padding: 1.5em;
+    }
+
+     &.third-place {
+        padding: 1em;
+    }
+
+    & img {
+      border: 1px solid $white;
+    }
+
+     & .rank  {
+      border-color: $white;
+      color: $white;
+     }
+
+     & h3 {
+      color: $white;
+     }
+
+     & p {
+      color: $white;
+     }
+  }
+
+  & img {
+    width: 10em;
+    height: 10em;
+    margin-top: 3em;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  & h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  & p {
+    font-size: 12px;
+    color: $dark-gray;
+  }
+
+  & .rank {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid $primary;
+    font-size: 12px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
