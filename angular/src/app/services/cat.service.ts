@@ -9,16 +9,29 @@ export interface Cat {
   score: number;
 }
 
+export interface Vote {
+  winnerId: string;
+  loserId: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CatService {
 
-private apiUrl = `${environment.apiUrl}/cats`;
+  private apiUrl = `${environment.apiUrl}/cats`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getCats(): Observable<Cat[]> {
     return this.http.get<Cat[]>(this.apiUrl);
+  }
+
+  getRandomCats(): Observable<Cat[]> {
+    return this.http.get<Cat[]>(`${this.apiUrl}/random`);
+  }
+
+  vote(data: Vote) {
+    return this.http.post<void>(`${this.apiUrl}/vote`, data);
   }
 }

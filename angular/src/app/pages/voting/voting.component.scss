@@ -1,0 +1,52 @@
+@use 'variables' as *;
+
+.battle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    width: 100%;
+    flex: 1;
+}
+
+.cat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    img {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border: 2px solid $primary;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: $primary;
+    }
+
+    button {
+        background: $primary;
+        color: $white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.divider {
+    width: 1px;
+    height: 60vh;
+    border-left: 2px dashed $light-gray;
+}

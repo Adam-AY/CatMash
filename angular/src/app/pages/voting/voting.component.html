@@ -1,0 +1,24 @@
+@if(pair) {
+<div class="battle">
+    <!-- First Cat -->
+    <div class="cat-card" (click)="vote(pair[0])">
+        <img [src]="pair[0].url" alt="Cat 1" />
+        <p>Chat 1</p>
+        <button>J'aime</button>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Second Cat -->
+    <div class="cat-card" (click)="vote(pair[1])">
+        <img [src]="pair[1].url" alt="Cat 2" />
+        <p>Chat 2</p>
+        <button>J'aime</button>
+    </div>
+
+</div>
+}
+@else {
+<app-empty></app-empty>
+}
