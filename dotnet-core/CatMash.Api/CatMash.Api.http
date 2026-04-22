@@ -1,0 +1,6 @@
+@CatMash.Api_HostAddress = http://localhost:5174
+
+GET {{CatMash.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
