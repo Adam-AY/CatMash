@@ -43,7 +43,6 @@ app.MapGet("/cats/random", (CatService service) =>
     return cats;
 });
 
-
 app.MapPost("/cats/vote", (Vote vote, CatService service) =>
 {
     var winner = service.Cats.FirstOrDefault(c => c.Id == vote.WinnerId);
