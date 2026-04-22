@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@shared/layout/header/header.component';
 import { FooterComponent } from "@shared/layout/footer/footer.component";
+import { SignalRService } from '@services/signalr.service';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +13,9 @@ import { FooterComponent } from "@shared/layout/footer/footer.component";
 })
 export class AppComponent {
 
-  constructor() { }
+  constructor(private signalRService: SignalRService) { }
+
+  ngOnInit() {
+    this.signalRService.startConnection();
+  }
 }

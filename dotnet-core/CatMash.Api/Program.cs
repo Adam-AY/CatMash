@@ -1,11 +1,12 @@
 using CatMash.Api;
+using CatMash.Api.Hubs;
 using CatMash.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<CatService>();
-
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -14,13 +15,16 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
 var app = builder.Build();
 
 app.UseCors("AllowCatMashClient");
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseHttpsRedirection();
 
