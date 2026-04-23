@@ -1,7 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { CatService } from '@services/cat.service';
-import { filter } from 'rxjs';
+import { SignalRService } from '@services/signalr.service';
+import { filter, Observable } from 'rxjs';
 import { RoutesPart } from 'src/app/app.routes';
 
 export interface Footer {
@@ -14,38 +16,34 @@ export interface Footer {
     standalone: true,
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss',
-    imports: [RouterLink],
+    imports: [RouterLink, AsyncPipe],
 })
 export class FooterComponent implements OnInit {
 
-    footer: Footer | undefined = undefined;
+    footer: Footer | null = null;
 
-    constructor(private router: Router, public catService: CatService) { }
+    totalVotes$!: Observable<number>;
+
+    constructor(private router: Router, private signalRService: SignalRService) {
+        this.router.events.pipe(filter(e => e instanceof NavigationEnd), takeUntilDestroyed())
+            .subscribe((event: NavigationEnd) => {
+              const currentRoute = event.urlAfterRedirects?.replace('/', '');
+                this.init(currentRoute);
+            });
+    }
 
     ngOnInit(): void {
-        this.router.events.pipe(
-            filter(e => e instanceof NavigationEnd)
-        ).subscribe((event: NavigationEnd) => {
-            const currentRoute = event.urlAfterRedirects?.replace('/', '');
-            this.init(currentRoute);
-        });
+        this.totalVotes$ = this.signalRService.totalVotes$;
     }
 
     private init(currentRoute: string): void {
-
         switch (currentRoute) {
             case RoutesPart.ranking:
-                this.setFooter('Revenir au vote', RoutesPart.voting)
+                this.footer = { caption: 'Revenir au vote', goToUrl: RoutesPart.voting };
                 break;
             case RoutesPart.voting:
-                this.setFooter('Voir le classement des chats', RoutesPart.ranking)
+                this.footer = { caption: 'Voir le classement des chats', goToUrl: RoutesPart.ranking };
                 break;
         }
-
-        this.catService.getTotalVotes();
-    }
-
-    private setFooter(caption: string, url: string): void {
-        this.footer = { caption: caption, goToUrl: url };
     }
 }

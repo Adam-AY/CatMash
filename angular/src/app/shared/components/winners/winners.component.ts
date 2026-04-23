@@ -1,17 +1,24 @@
-import { Component, Input } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Cat } from "@services/cat.service";
 import { CardComponent } from "../card/card.component";
+import { SignalRService } from "@services/signalr.service";
+import { Observable } from "rxjs";
+import { AsyncPipe, NgIf } from "@angular/common";
 
-// Version 1 - A modifier
 @Component({
     selector: 'app-winners',
     templateUrl: './winners.component.html',
     styleUrl: './winners.component.scss',
     standalone: true,
-    imports: [CardComponent]
+    imports: [CardComponent, NgIf, AsyncPipe]
 })
-export class WinnersComponent {
+export class WinnersComponent implements OnInit {
 
-    @Input() winners: Cat[] = [];
+    winners$!: Observable<Cat[]>;
 
+    constructor(private signalRService: SignalRService) { }
+
+    ngOnInit() {
+        this.winners$ = this.signalRService.winners$;
+    }
 }

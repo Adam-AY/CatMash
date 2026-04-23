@@ -17,5 +17,8 @@ export class AppComponent {
 
   ngOnInit() {
     this.signalRService.startConnection();
+    this.signalRService.listenForUpdates();
+    this.signalRService.initWinners();
+    this.signalRService.initTotalVotes();
   }
 }

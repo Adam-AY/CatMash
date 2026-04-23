@@ -3,6 +3,6 @@
     <button class="ranking-btn">
         <b>{{footer?.caption}}</b>
         <br><br>
-        <span>{{catService.totalVotes}} votes joués</span>
+        <span>{{totalVotes$ | async}} votes joués</span>
     </button>
 </div>
