@@ -10,12 +10,14 @@ public class CatService
 
     private int _totalVotes = 0;
     public int GetTotalVotes() => _totalVotes;
-
     public List<Cat> Cats { get; private set; } = new();
 
-    public CatService(IHttpClientFactory httpClientFactory)
+    private readonly string _catsUrl;
+
+    public CatService(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         _httpClientFactory = httpClientFactory;
+        _catsUrl = config["ExternalApis:CatsUrl"]!;
         LoadCats().GetAwaiter().GetResult();
     }
 
@@ -102,7 +104,7 @@ public class CatService
         try
         {
             var http = _httpClientFactory.CreateClient();
-            var json = await http.GetStringAsync("https://conseil.latelier.co/data/cats.json");
+            var json = await http.GetStringAsync(_catsUrl);
 
             var options = new JsonSerializerOptions
             {

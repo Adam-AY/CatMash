@@ -11,14 +11,20 @@ builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowCatMashClient",
-        policy =>
+    options.AddPolicy("AllowCatMashClient", policy =>
+    {
+        var allowedOrigin = builder.Configuration["Cors:AllowedOrigins"];
+
+        if (string.IsNullOrEmpty(allowedOrigin))
         {
-            policy.WithOrigins("http://localhost:4200")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+            throw new Exception("CORS origin is not configured");
+        }
+
+        policy.WithOrigins(allowedOrigin)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 var app = builder.Build();
