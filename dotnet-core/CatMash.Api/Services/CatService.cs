@@ -21,6 +21,10 @@ public class CatService
         LoadCats().GetAwaiter().GetResult();
     }
 
+    public CatService()
+    {
+        Cats = new List<Cat>();
+    }
 
     public void Vote(Vote vote)
     {
