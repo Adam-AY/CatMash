@@ -58,19 +58,11 @@ app.MapGet("/cats/random", (CatService service) =>
 
 app.MapPost("/cats/vote", async (Vote vote, CatService service, IHubContext<NotificationHub> hubContext) =>
 {
-    var winner = service.Cats.FirstOrDefault(c => c.Id == vote.WinnerId);
-    var loser = service.Cats.FirstOrDefault(c => c.Id == vote.LoserId);
-
-    if (winner == null || loser == null)
-    {
-        return Results.NotFound("Cat not found");
-    }
-
-    winner.Score += 1;
-
-    await hubContext.Clients.All.SendAsync("VoteIncremented");
-
+    service.Vote(vote);
     var winners = service.GetWinners();
+    var totalVotes = service.GetTotalVotes();
+
+    await hubContext.Clients.All.SendAsync("VoteIncremented", totalVotes);
     await hubContext.Clients.All.SendAsync("WinnersUpdated", winners);
 
     return Results.Ok();

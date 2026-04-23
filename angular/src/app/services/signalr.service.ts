@@ -36,9 +36,8 @@ export class SignalRService {
   }
 
   listenForUpdates() {
-    this.hubConnection.on(this.VOTE_INCREMENTED_GROUP_NAME, () => {
-      const current = this.totalVotesSubject.value;
-      this.totalVotesSubject.next(current + 1);
+    this.hubConnection.on(this.VOTE_INCREMENTED_GROUP_NAME, (total) => {
+      this.totalVotesSubject.next(total);
     });
 
     this.hubConnection.on(this.WINNERS_UPDATED_GROUP_NAME, (winners: Cat[]) => {

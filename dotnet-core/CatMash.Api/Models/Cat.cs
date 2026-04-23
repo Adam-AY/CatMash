@@ -4,5 +4,6 @@ public class Cat
 {
     public required string Id { get; set; }
     public required string Url { get; set; }
-    public int Score { get; set; } = 0;
+    public double Score { get; set; } = 1200;
+
 }

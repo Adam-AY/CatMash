@@ -1,4 +1,4 @@
-import { NgClass } from "@angular/common";
+import { DecimalPipe, NgClass } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { Cat } from "@services/cat.service";
 
@@ -8,7 +8,7 @@ import { Cat } from "@services/cat.service";
     templateUrl: './card.component.html',
     styleUrl: './card.component.scss',
     standalone: true,
-    imports: [NgClass]
+    imports: [NgClass, DecimalPipe]
 })
 export class CardComponent {
 
