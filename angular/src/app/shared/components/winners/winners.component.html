@@ -1,15 +1,8 @@
-<div *ngIf="winners$ | async as winners">
-    <div class="row flex-end">
-        <div class="col col-30">
-            <app-card cssClass="winner second-place" [item]="winners[1]" [rank]="2"></app-card>
-        </div>
-
-        <div class="col col-30">
-            <app-card cssClass="winner first-place" [item]="winners[0]" [rank]="1"></app-card>
-        </div>
-
-        <div class="col col-30">
-            <app-card cssClass="winner third-place" [item]="winners[2]" [rank]="3"></app-card>
-        </div>
+<div class="row flex-end">
+    <div class="col col-30" *ngFor="let p of podium">
+        <app-card [item]="p.cat" 
+                  [rank]="p.rank"
+                  [cssClass]="'winner ' + p.cssClass">
+        </app-card>
     </div>
 </div>

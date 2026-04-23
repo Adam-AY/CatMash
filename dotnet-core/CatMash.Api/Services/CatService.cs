@@ -57,15 +57,32 @@ public class CatService
         _totalVotes++;
     }
 
-    // TO DO - à améliorer
+    /// <summary>
+    /// Pour éviter une logique complexe et les égalités entre les chats,
+    /// seuls les chats du top 3 ayant un score unique sont considérés comme gagnants.
+    /// 
+    /// Selon ce principe, après plusieurs votes :
+    /// - il peut n'y avoir aucun gagnant,
+    /// - ou 1, 2, ou 3 gagnants.
+    /// 
+    /// L'objectif est de ne conserver que les chats ayant un score distinct
+    /// parmi les mieux classés.
+    /// 
+    /// Il s'agit d'un choix de conception, adaptable selon les besoins.
+    /// </summary>
+    /// <returns></returns>
     public List<Cat> GetWinners()
     {
         try
         {
-            var winners =  Cats.Where(c => c.Score != 1200)
-                               .OrderByDescending(c => c.Score)
-                               .Take(3)
-                               .ToList();
+            var winners = Cats
+                  .Where(c => c.Score > 1200)
+                  .GroupBy(c => c.Score)
+                  .Where(g => g.Count() == 1)
+                  .OrderByDescending(g => g.Key)
+                  .Take(3)
+                  .SelectMany(g => g)
+                  .ToList();
 
             return winners;
         }
