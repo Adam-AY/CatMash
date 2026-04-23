@@ -9,7 +9,7 @@ import { Cat, CatService } from '@services/cat.service';
   styleUrl: './voting.component.scss',
   imports: [EmptyComponent]
 })
-export class VoteComponent implements OnInit {
+export class VotingComponent implements OnInit {
 
   pair!: Cat[];
 

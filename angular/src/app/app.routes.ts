@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { RankingComponent } from '@pages/ranking/ranking.component';
-import { VoteComponent as VotingComponent } from '@pages/voting/voting.component';
+import { VotingComponent as VotingComponent } from '@pages/voting/voting.component';
 
 export class RoutesPart {
     static voting = 'voting';
