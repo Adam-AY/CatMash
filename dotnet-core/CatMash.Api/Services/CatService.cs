@@ -53,34 +53,27 @@ public class CatService
 
     public void Vote(Vote vote)
     {
-        try
+        var winner = Cats.FirstOrDefault(c => c.Id == vote.WinnerId);
+        var loser = Cats.FirstOrDefault(c => c.Id == vote.LoserId);
+
+        if (winner == null || loser == null)
         {
-            var winner = Cats.FirstOrDefault(c => c.Id == vote.WinnerId);
-            var loser = Cats.FirstOrDefault(c => c.Id == vote.LoserId);
-
-            if (winner == null || loser == null)
-            {
-                throw new Exception("Cat not found");
-            }
-
-            #region ELO 
-            
-            const int K = 32;
-
-            double expectedWinner = 1 / (1 + Math.Pow(10, (loser.Score - winner.Score) / 400.0));
-            double expectedLoser = 1 / (1 + Math.Pow(10, (winner.Score - loser.Score) / 400.0));
-
-            winner.Score += K * (1 - expectedWinner);
-            loser.Score += K * (0 - expectedLoser);
-
-            #endregion
-
-            IncrementVotes();
+            throw new Exception("Cat not found");
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        #region ELO 
+
+        const int K = 32;
+
+        double expectedWinner = 1 / (1 + Math.Pow(10, (loser.Score - winner.Score) / 400.0));
+        double expectedLoser = 1 / (1 + Math.Pow(10, (winner.Score - loser.Score) / 400.0));
+
+        winner.Score += K * (1 - expectedWinner);
+        loser.Score += K * (0 - expectedLoser);
+
+        #endregion
+
+        IncrementVotes();
     }
 
     public void IncrementVotes()
@@ -104,23 +97,16 @@ public class CatService
     /// <returns></returns>
     public List<Cat> GetWinners()
     {
-        try
-        {
-            var winners = Cats
-                  .Where(c => c.Score > 1200)
-                  .GroupBy(c => c.Score)
-                  .Where(g => g.Count() == 1)
-                  .OrderByDescending(g => g.Key)
-                  .Take(3)
-                  .SelectMany(g => g)
-                  .ToList();
+        var winners = Cats
+              .Where(c => c.Score > 1200)
+              .GroupBy(c => c.Score)
+              .Where(g => g.Count() == 1)
+              .OrderByDescending(g => g.Key)
+              .Take(3)
+              .SelectMany(g => g)
+              .ToList();
 
-            return winners;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return winners;
     }
 
 
@@ -130,25 +116,18 @@ public class CatService
     /// <returns></returns>
     private async Task<List<Cat>> LoadCats()
     {
-        try
+        var http = _httpClientFactory.CreateClient();
+        var json = await http.GetStringAsync(_catsUrl);
+
+        var options = new JsonSerializerOptions
         {
-            var http = _httpClientFactory.CreateClient();
-            var json = await http.GetStringAsync(_catsUrl);
+            PropertyNameCaseInsensitive = true
+        };
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+        var result = JsonSerializer.Deserialize<CatResponse>(json, options);
 
-            var result = JsonSerializer.Deserialize<CatResponse>(json, options);
+        var cats = result?.Images ?? new List<Cat>();
 
-            var cats = result?.Images ?? new List<Cat>();
-
-            return cats;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return cats;
     }
 }
