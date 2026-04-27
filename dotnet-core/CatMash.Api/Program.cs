@@ -35,6 +35,20 @@ app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseHttpsRedirection();
 
+using (var scope = app.Services.CreateScope())
+{
+    var catService = scope.ServiceProvider.GetRequiredService<CatService>();
+
+    try
+    {
+        await catService.InitializeAsync();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error loading cats: {ex.Message}");
+    }
+}
+
 #region Endpoints
 
 app.MapGet("/cats", (CatService service) =>

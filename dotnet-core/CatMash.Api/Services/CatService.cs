@@ -18,12 +18,17 @@ public class CatService
     {
         _httpClientFactory = httpClientFactory;
         _catsUrl = config["ExternalApis:CatsUrl"]!;
-        LoadCats().GetAwaiter().GetResult();
     }
 
     public CatService()
     {
         Cats = new List<Cat>();
+    }
+
+
+    public async Task InitializeAsync()
+    {
+        await LoadCats();
     }
 
     public void Vote(Vote vote)
