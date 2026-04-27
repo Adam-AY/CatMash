@@ -25,7 +25,9 @@ export class SignalRService {
 
   startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.apiUrl)
+      .withUrl(this.apiUrl, {
+        withCredentials: false
+      })
       .withAutomaticReconnect()
       .build();
 
