@@ -10,8 +10,10 @@ public class CatService
 
     private int _totalVotes = 0;
     public int GetTotalVotes() => _totalVotes;
-    public List<Cat> Cats { get; private set; } = new();
+    public IReadOnlyList<Cat> Cats => _cats ?? [];
 
+    private List<Cat>? _cats;
+    private readonly SemaphoreSlim _lock = new(1, 1);
     private readonly string _catsUrl;
 
     public CatService(IHttpClientFactory httpClientFactory, IConfiguration config)
@@ -22,13 +24,31 @@ public class CatService
 
     public CatService()
     {
-        Cats = new List<Cat>();
+       // Cats = new List<Cat>();
     }
 
-
-    public async Task InitializeAsync()
+    public async Task<IReadOnlyList<Cat>> InitializeAsync()
     {
-        await LoadCats();
+        if (_cats != null)
+        {
+            return _cats;
+        }
+
+        await _lock.WaitAsync();
+
+        try
+        {
+            if (_cats == null)
+            {
+                _cats = await LoadCats();
+            }
+        }
+        finally
+        {
+            _lock.Release();
+        }
+
+        return _cats;
     }
 
     public void Vote(Vote vote)
@@ -108,7 +128,7 @@ public class CatService
     /// Load Cats from Atelier Url
     /// </summary>
     /// <returns></returns>
-    private async Task LoadCats()
+    private async Task<List<Cat>> LoadCats()
     {
         try
         {
@@ -122,7 +142,9 @@ public class CatService
 
             var result = JsonSerializer.Deserialize<CatResponse>(json, options);
 
-            Cats = result?.Images ?? new List<Cat>();
+            var cats = result?.Images ?? new List<Cat>();
+
+            return cats;
         }
         catch (Exception)
         {
