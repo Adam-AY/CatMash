@@ -50,30 +50,24 @@ using (var scope = app.Services.CreateScope())
 
 #region Endpoints
 
-app.MapGet("/cats", (CatService service) =>
+app.MapGet("/cats", (CatService service, bool? random) =>
 {
+    if (random == true)
+    {
+        return service.Cats
+            .OrderBy(_ => Guid.NewGuid())
+            .Take(2)
+            .ToList();
+    }
+
     var winners = service.GetWinners();
 
-    var cats = service.Cats
+    return service.Cats
         .Where(c => !winners.Any(w => w.Id == c.Id))
         .OrderByDescending(c => c.Score)
         .ToList();
-
-    return cats;
 });
 
-app.MapGet("/cats/random", (CatService service) =>
-{
-    var rnd = new Random();
-
-    var cats = service.Cats
-        .OrderBy(x => rnd.Next())
-        .Take(2)
-        .Distinct()
-        .ToList();
-
-    return cats;
-});
 
 app.MapPost("/cats/vote", async (Vote vote, CatService service, IHubContext<NotificationHub> hubContext) =>
 {

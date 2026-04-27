@@ -28,7 +28,7 @@ export class CatService {
   }
 
   getRandomCats(): Observable<Cat[]> {
-    return this.http.get<Cat[]>(`${this.apiUrl}/random`);
+    return this.http.get<Cat[]>(`${this.apiUrl}?random=true`);
   }
 
   vote(data: Vote) {
