@@ -1,5 +1,6 @@
 ﻿
 using CatMash.Api.Models;
+using CatMash.Api.Tools;
 using System.Text.Json;
 
 namespace CatMash.Api;
@@ -61,24 +62,12 @@ public class CatService
             throw new Exception("Cat not found");
         }
 
-        #region ELO 
+        Interlocked.Increment(ref _totalVotes);
 
-        const int K = 32;
+        var (newWinner, newLoser) = EloCalculator.Calculate(winner.Score, loser.Score);
 
-        double expectedWinner = 1 / (1 + Math.Pow(10, (loser.Score - winner.Score) / 400.0));
-        double expectedLoser = 1 / (1 + Math.Pow(10, (winner.Score - loser.Score) / 400.0));
-
-        winner.Score += K * (1 - expectedWinner);
-        loser.Score += K * (0 - expectedLoser);
-
-        #endregion
-
-        IncrementVotes();
-    }
-
-    public void IncrementVotes()
-    {
-        _totalVotes++;
+        winner.Score = newWinner;
+        loser.Score = newLoser;
     }
 
     /// <summary>
